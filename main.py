@@ -1,45 +1,44 @@
-from sensor import Sensor, LCD
+from sensor import Enviro
 from util import Request
-from server import Server
-
+from src.safety import Safety
 import json
-import math
+
+
+class Transmite:
+    endpoint = 'http://192.168.1.243:3000'
+    ipAddress = '192.168.1.121'
+
+    def __init__(self):
+        # Initialize request
+        self.request = Request(self.endpoint)
+
+    def get_configs(self):
+        res = self.request.get('/configs')
+        return json.loads(res.content)
+
+    def on(self, data):
+        self.request.post('/climate-data', data)
 
 
 class Program:
-    endpoint = 'http://192.168.1.243:3000'
-    ipAddress = '192.168.1.121'
-    port = 80
-
     def __init__(self):
-        # Initialize sensor
-        self.sensor = Sensor()
-        # Initialize LCD
-        self.lcd = LCD()
-        # Set request
-        self.request = Request(self.endpoint)
-        # Get config and instructions from server
-        self.get_configs()
+        # Initialize Enviro board
+        self.sensor = Enviro(self.sensor_output)
+        # Transmite data
+        self.conn = Transmite()
+        # Get config instructions
+        self.configs = self.conn.get_configs()
+        # safety pass jobs(time, function), and configs
+        self.safety = Safety(self.configs)
 
-    def get_configs(self):
-        # Get configs and instructions
-        self.config = self.request.get('/config')
-
-    def display_data(self, data):
-        temp = data['temperature']
-        self.show_data = str(round(temp['data'], 2)) + ' ' + temp['unit']
-
-        self.lcd.contnent(self.show_data)
-        self.lcd.text_position()
-        self.lcd.draw_display()
-
+    # Sensor output callback passed to Enviro
     def sensor_output(self, data):
-        self.request.post(data=data)
-        self.display_data(data)
+        self.conn.on(data)
+        self.safety.on(data)
 
     def main(self):
-        self.sensor.start(self.sensor_output)
-        self.lcd.run()
+        self.safety.start(self.sensor)
+        self.sensor.start()
 
 
 Program().main()
