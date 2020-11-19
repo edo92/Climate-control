@@ -5,7 +5,7 @@ import json
 
 
 class Transmite:
-    endpoint = 'http://192.168.1.243:3000'
+    endpoint = 'https://c2f82d141074ff41254776558b262db7.balena-devices.com'
     ipAddress = '192.168.1.121'
 
     def __init__(self):
@@ -18,6 +18,9 @@ class Transmite:
 
     def on(self, data):
         self.request.post('/climate-data', data)
+
+    def notify(self, data):
+        self.post('/notify', data)
 
 
 class Program:

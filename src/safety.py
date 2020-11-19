@@ -1,7 +1,8 @@
 from src.scheduler import Job_Schedule
+from src.notification import Notification
 
 
-class Safety_Mechanism:
+class Safety_Mechanism(Notification):
     def light_state_on(self):
         self.light_state = True
 
@@ -11,7 +12,7 @@ class Safety_Mechanism:
     def light_safety(self, data):
         lux = data['lux']['data']
         if self.light_state == True and lux == 0:
-            print('error')
+            self.notify('light', 'light is off')
 
         if self.light_state == False and lux > 0:
             print('second error')

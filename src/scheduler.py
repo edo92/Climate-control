@@ -1,7 +1,6 @@
 from util import Moment
 import schedule
 
-
 class Job_Schedule:
     def __init__(self):
         self.schedule = schedule
