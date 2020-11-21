@@ -7,17 +7,32 @@ import datetime
 class Request:
     def __init__(self, url):
         self.url = url
+        self.errc = 0
         self.headers = {
             'Content-type': 'application/json',
             'Accept': 'text/plain'
         }
 
+    def clearError(self):
+        self.errc = 0
+
+    def addError(self):
+        self.errc += 1
+
     def get(self, route):
-        return requests.get(url=self.url + route, headers=self.headers)
+        try:
+            return requests.get(url=self.url + route, headers=self.headers)
+        except:
+            self.addError()
+            return False
 
     def post(self, route, data):
-        requests.post(url=self.url + route, data=json.dumps(
-            data), headers=self.headers)
+        try:
+            requests.post(url=self.url + route, data=json.dumps(
+                data), headers=self.headers)
+        except:
+            self.addError()
+            return False
 
 
 class Moment:

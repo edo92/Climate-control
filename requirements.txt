@@ -1,3 +1,16 @@
-Flask
 uvwsgi
 demjson
+smbus2
+smbus
+enviroplus
+
+ltr559
+pms5003
+ST7735
+Pillow
+pimoroni-bme280
+schedule
+
+RPi.GPIO
+numpy
+requests
