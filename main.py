@@ -1,3 +1,4 @@
+import os
 from sensor import Enviro
 from util import Request
 from src.safety import Safety
@@ -5,8 +6,7 @@ import json
 
 
 class Transmite:
-    endpoint = 'https://c2f82d141074ff41254776558b262db7.balena-devices.com'
-    ipAddress = '192.168.1.121'
+    endpoint = os.getenv('SERVER_URI')
 
     def __init__(self):
         # Initialize request
